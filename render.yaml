@@ -1,0 +1,22 @@
+# Configuracion de Render (opcional). En Render: New > Blueprint > elige tu repositorio.
+services:
+  - type: web
+    name: gastosbot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 2 --threads 4 --timeout 60 --bind 0.0.0.0:$PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7        # IMPORTANTE: la app esta probada con 3.12 (Render usa 3.14 por defecto)
+      - key: APP_ENV
+        value: production
+      - key: APP_TZ
+        value: America/Caracas
+      - key: SECRET_KEY
+        generateValue: true
+      - key: APP_PIN
+        sync: false          # lo escribes tu en Render (4 a 6 digitos)
+      - key: DATABASE_URL
+        sync: false          # la cadena de conexion de Neon
